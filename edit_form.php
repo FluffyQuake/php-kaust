@@ -12,9 +12,14 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'Salvesta'){
     header('location: book.php?id=' .$id);
 }
 
-$stmt = $pdo->prepare('SELECT * FROM books WHERE id = :id');
-$stmt->execute(['id' =>$id]);
-$book = $stmt->fetch();
+$stmtBook = $pdo->prepare('SELECT * FROM books WHERE id = :id');
+$stmtBook->execute(['id' =>$id]);
+$book = $stmtBook->fetch();
+
+$stmtBookAuthors = $pdo->prepare('SELECT * FROM book_authors WHERE book_id = :book_id');
+$stmtBookAuthors->execute(['book_id' =>$id]);
+
+$stmtAuthors = $pdo->query('SELECT * FROM authors');
 
 // var_dump($book);a
 ?>
@@ -28,15 +33,13 @@ $book = $stmt->fetch();
     <title>Document</title>
 </head>
 <body>
-    <form action="edit_form.php?id=<?$id;?>" method="POST">
-        <div>
-            <label for="title">Pealkiri:</label>
-            <input type="text" name="title" value="<?=$book['title'];?>" style="width: 320px;">
-        </div>
-        <div>
+    <form action="edit_form.php?id=<?=$id;?>" method="POST">
+            <label for="title">Pealkiri:</label><input type="text" name="title" value="<?=$book['title'];?>" style="width: 320px;">
+            <br>
             <label for="title">Laoseis:</label> <input type="text" name="stock-saldo" value="<?=$book['stock_saldo'];?>">
+            <br>
             <input type="submit" value="Salvesta" name="edit">
-        </div>
     </form>
+    <script src="app.js"></script>
 </body>
 </html>
