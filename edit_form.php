@@ -46,7 +46,11 @@ $stmtAuthors = $pdo->query('SELECT * FROM authors');
                 <?php } ?>
             </select>
             <br>
+            <br>
             <input type="submit" value="Salvesta" name="edit">
+            <br>
+            <br>
+            <input type="button" value="Main page" onclick="location='index.php'" />
     </form>
     <!-- <script src="app.js"></script> -->
 </body>

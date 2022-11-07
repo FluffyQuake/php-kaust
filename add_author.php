@@ -27,8 +27,8 @@ var_dump($_POST);
         <input type="text" name="last-name" placeholder="Perenimi">
         <br>
         <input type="submit" name="add_author" value="Lisa">
+        <br>
+        <input type="button" value="Main page" onclick="location='index.php'" />
     </form>
 </body>
 </html>
-
-<!-- 'author' => $author -->

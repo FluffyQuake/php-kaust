@@ -42,5 +42,7 @@ $stmt->execute(['id' => $id]);
             <input type="submit" value="kustuta" name="delete">
         </form>
     </div>
+    <br>
+    <input type="button" value="Main page" onclick="location='index.php'" />
 </body>
 </html>

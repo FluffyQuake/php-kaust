@@ -27,7 +27,6 @@ if (isset($q) && $q) {
                <input type="submit" name="search" value="Otsi">
           </form>
      </nav>
-
      <main>
           <ul>
           <?php while($book = $stmt->fetch()){?>
