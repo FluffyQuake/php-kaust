@@ -16,10 +16,11 @@ $stmtBook = $pdo->prepare('SELECT * FROM books WHERE id = :id');
 $stmtBook->execute(['id' =>$id]);
 $book = $stmtBook->fetch();
 
-$stmtBookAuthors = $pdo->prepare('SELECT * FROM book_authors WHERE book_id = :book_id');
+$stmtBookAuthors = $pdo->prepare('SELECT * FROM authors LEFT JOIN book_authors ba ON a.id=b.author_id WHERE ba.book_id IS NOT :book_id');
 $stmtBookAuthors->execute(['book_id' =>$id]);
 
-$stmtAuthors = $pdo->query('SELECT * FROM authors');
+$stmtAuthors = $pdo->prepare('SELECT * FROM authors a WHERE a.id NOT IN (SELECT authod_id FROM book_authors WHERE book_id = :book_id)');
+$stmtAuthors->execute(['book_id' =>$id]);
 
 // var_dump($book);a
 ?>
@@ -30,7 +31,7 @@ $stmtAuthors = $pdo->query('SELECT * FROM authors');
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><?=$book['title'];?></title>
 </head>
 <body>
     <form action="edit_form.php?id=<?=$id;?>" method="POST">
@@ -38,6 +39,7 @@ $stmtAuthors = $pdo->query('SELECT * FROM authors');
             <br>
             <label for="title">Laoseis:</label> <input type="text" name="stock-saldo" value="<?=$book['stock_saldo'];?>">
             <br>
+            <input type="text">
             <input type="submit" value="Salvesta" name="edit">
     </form>
     <script src="app.js"></script>
