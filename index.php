@@ -2,7 +2,13 @@
 
 require_once('connection.php');
 
-$stmt = $pdo->query('SELECT * FROM books WHERE is_deleted=0');
+$q = $_GET['q'];
+if (isset($q) && $q) {
+     $stmt = $pdo->prepare('SELECT * FROM books WHERE is_deleted=0 AND title LIKE :q');
+     $stmt->execute(['q' => "%{$q}%"]);
+} else {
+     $stmt = $pdo->query('SELECT * FROM books WHERE is_deleted=0');
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +22,12 @@ $stmt = $pdo->query('SELECT * FROM books WHERE is_deleted=0');
 <body>
      <nav>
           <a href="add_author.php">Lisa autor</a>
+          <form action="index.php" method="get">
+               <input type="text" name="q" placeholder="Otsing" value="<?=$q;?>">
+               <input type="submit" name="search" value="Otsi">
+          </form>
      </nav>
+
      <main>
           <ul>
           <?php while($book = $stmt->fetch()){?>

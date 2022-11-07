@@ -8,21 +8,18 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'Salvesta'){
     
     $stmt = $pdo->prepare('UPDATE books SET title = :title, stock_saldo = :stock_saldo WHERE id = :id');
     $stmt->execute(['title' => $_POST['title'], 'stock_saldo' => $_POST['stock-saldo'],'id' =>$id]);
+    
+    $stmt = $pdo->prepare('UPDATE book_authors SET author_id = :authord_id WHERE book_id = :book_id');
+    $stmt->execute(['author_id' => $_POST['author_id'], 'book_id' =>$id]);
 
     header('location: book.php?id=' .$id);
 }
 
-$stmtBook = $pdo->prepare('SELECT * FROM books WHERE id = :id');
+$stmtBook = $pdo->prepare('SELECT * FROM books b LEFT JOIN book_authors ba ON b.id=ba.book_id WHERE b.id = :id');
 $stmtBook->execute(['id' =>$id]);
 $book = $stmtBook->fetch();
 
-$stmtBookAuthors = $pdo->prepare('SELECT * FROM authors LEFT JOIN book_authors ba ON a.id=b.author_id WHERE ba.book_id IS NOT :book_id');
-$stmtBookAuthors->execute(['book_id' =>$id]);
-
-$stmtAuthors = $pdo->prepare('SELECT * FROM authors a WHERE a.id NOT IN (SELECT authod_id FROM book_authors WHERE book_id = :book_id)');
-$stmtAuthors->execute(['book_id' =>$id]);
-
-// var_dump($book);a
+$stmtAuthors = $pdo->query('SELECT * FROM authors');
 ?>
 
 <!DOCTYPE html>
@@ -37,11 +34,20 @@ $stmtAuthors->execute(['book_id' =>$id]);
     <form action="edit_form.php?id=<?=$id;?>" method="POST">
             <label for="title">Pealkiri:</label><input type="text" name="title" value="<?=$book['title'];?>" style="width: 320px;">
             <br>
-            <label for="title">Laoseis:</label> <input type="text" name="stock-saldo" value="<?=$book['stock_saldo'];?>">
+            <label for="title">Laoseis:</label><input type="text" name="stock-saldo" value="<?=$book['stock_saldo'];?>">
             <br>
-            <input type="text">
+            <div style="font-weight: bold;">Autorid</div>
+
+            <select name="author_id">
+                <?php while ($author = $stmtAuthors->fetch()) {?>
+                    <option value="<?=$author['id'];?>"><?=$author['first_name'];?> <?=$author['last_name'];?>
+                        <?=$author['first_name'];?> <?=$author['last_name'];?>
+                    </option>
+                <?php } ?>
+            </select>
+            <br>
             <input type="submit" value="Salvesta" name="edit">
     </form>
-    <script src="app.js"></script>
+    <!-- <script src="app.js"></script> -->
 </body>
 </html>
